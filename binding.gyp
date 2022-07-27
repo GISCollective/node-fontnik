@@ -16,13 +16,11 @@
       'compiler_checks': [
         '-Wall',
         '-Wextra',
-        '-Weffc++',
         '-Wconversion',
         '-pedantic-errors',
         '-Wconversion',
         '-Wshadow',
         '-Wfloat-equal',
-        '-Wuninitialized',
         '-Wunreachable-code',
         '-Wold-style-cast',
         '-Wno-error=unused-variable',
