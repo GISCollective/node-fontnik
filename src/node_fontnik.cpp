@@ -3,7 +3,9 @@
 #include <napi.h>
 //#include <uv.h>
 
-namespace node_fontnik {
+
+using namespace Napi;
+using namespace node_fontnik;
 
 Napi::Object init(Napi::Env env, Napi::Object exports) {
     exports.Set("load", Napi::Function::New(env, Load));
@@ -16,5 +18,3 @@ Napi::Object init(Napi::Env env, Napi::Object exports) {
 // warning about code inside nodejs that we don't control and can't
 // directly change to avoid the warning.
 NODE_API_MODULE(fontnik, init) // NOLINT
-
-} // namespace node_fontnik
