@@ -24,34 +24,6 @@ function run() {
     fi
 
     #
-    # COMPILER TOOLCHAIN
-    #
-
-    # We install clang++ without the mason client for a couple reasons:
-    # 1) decoupling makes it viable to use a custom branch of mason that might
-    #    modify the upstream s3 bucket in a such a way that does not give
-    #    it access to build tools like clang++
-    # 2) Allows us to short-circuit and use a global clang++ install if it
-    #    is available to save space for local builds.
-    GLOBAL_CLANG="${HOME}/.mason/mason_packages/${PLATFORM}-$(uname -m)/clang++/${MASON_LLVM_RELEASE}"
-    GLOBAL_LLVM="${HOME}/.mason/mason_packages/${PLATFORM}-$(uname -m)/llvm/${MASON_LLVM_RELEASE}"
-    if [[ -d ${GLOBAL_LLVM} ]]; then
-      echo "Detected '${GLOBAL_LLVM}/bin/clang++', using it"
-      local llvm_toolchain_dir=${GLOBAL_LLVM}
-    elif [[ -d ${GLOBAL_CLANG} ]]; then
-      echo "Detected '${GLOBAL_CLANG}/bin/clang++', using it"
-      local llvm_toolchain_dir=${GLOBAL_CLANG}
-    elif [[ -d ${GLOBAL_CLANG} ]]; then
-      echo "Detected '${GLOBAL_CLANG}/bin/clang++', using it"
-      local llvm_toolchain_dir=${GLOBAL_CLANG}
-    elif [[ ! -d ${llvm_toolchain_dir} ]]; then
-      BINARY="${MASON_URL}/clang++/${MASON_LLVM_RELEASE}.tar.gz"
-      echo "Downloading ${BINARY}"
-      mkdir -p ${llvm_toolchain_dir}
-      curl -sSfL ${BINARY} | tar --gunzip --extract --strip-components=1 --directory=${llvm_toolchain_dir}
-    fi
-
-    #
     # MASON
     #
 
