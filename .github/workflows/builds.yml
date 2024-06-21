@@ -55,9 +55,6 @@ jobs:
 
       - name: Test
         if: matrix.os.name == 'linux'
-        env:
-          CXX: c++
-          CC: cc
         run: |
           npm ci
           ./scripts/setup.sh --config local.env
@@ -173,6 +170,35 @@ jobs:
           node-version: "16"
 
       - name: Build
+        if: matrix.os.name == 'linux'
+        run: |
+          ./scripts/setup.sh --config local.env
+          source local.env
+          make release
+
+      - name: Build
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
+        env:
+          CXX: clang++
+          CC: clang
+          llvm_toolchain_dir: /opt/homebrew/opt/llvm/
+          LDFLAGS: "-L/opt/homebrew/opt/boost/lib -L/opt/homebrew/opt/freetype2/lib"
+          CPPFLAGS: "-I/opt/homebrew/opt/boost/include -I/opt/homebrew/opt/freetype2/include/freetype2/"
+          DISABLE_BOOST_INSTALL_MASON: "true"
+          DISABLE_BOOST_INSTALL_FREETYPE: "true"
+          DISABLE_CLANG_INSTALL_VIA_MASON: "true"
+        run: |
+          ./scripts/setup.sh --config local.env
+          source local.env
+          make release
+
+      - name: Build
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
+        env:
+          CXX: clang++
+          CC: clang
+          llvm_toolchain_dir: /opt/homebrew/opt/llvm/
+          DISABLE_CLANG_INSTALL_VIA_MASON: "true"
         run: |
           ./scripts/setup.sh --config local.env
           source local.env
