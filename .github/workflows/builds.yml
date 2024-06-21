@@ -36,9 +36,15 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Set up MacOS env
-        if: matrix.os.name == 'darwin'
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
-          brew install python@3.9 llvm
+          brew install python llvm
+          brew install python-setuptools
+
+      - name: Set up MacOS env
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
+        run: |
+          brew install llvm
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux'
