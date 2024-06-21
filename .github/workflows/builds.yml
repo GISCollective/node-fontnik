@@ -35,6 +35,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: install setuptools
+        if: matrix.os.name == 'darwin'
+        run: pip install setuptools
+
       - name: Test
         run: |
           npm ci
