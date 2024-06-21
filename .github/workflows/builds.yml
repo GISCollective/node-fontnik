@@ -38,7 +38,7 @@ jobs:
       - name: Set up python on macos
         if: matrix.os.name == 'darwin'
         run: |
-          brew install python
+          brew install python llvm
           brew install python-setuptools
 
       - name: Test
