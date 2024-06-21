@@ -36,12 +36,17 @@ jobs:
           registry-url: https://registry.npmjs.org/
           node-version: ${{ matrix.node }}
 
-      - name: Set up python on macos
+      - name: Set up MacOS env
         if: matrix.os.name == 'darwin'
         run: |
           brew install python llvm
           brew install python-setuptools
 
+      - name: Set up Linux env
+        if: matrix.os.name == 'linux'
+        run: |
+          apt update
+          apt install -y clang llvm
 
       - name: Test
         run: |
