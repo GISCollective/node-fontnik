@@ -169,6 +169,24 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Set up MacOS env
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
+        run: |
+          brew install python llvm freetype boost
+          python3 -m pip install --break-system-packages --no-binary :all: --upgrade setuptools
+
+      - name: Set up MacOS env
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
+        run: |
+          brew install llvm
+          python3 -m pip install --no-binary :all: --upgrade setuptools
+
+      - name: Set up Linux env
+        if: matrix.os.name == 'linux'
+        run: |
+          sudo apt update
+          sudo apt install -y clang llvm
+
       - name: Build
         if: matrix.os.name == 'linux'
         run: |
