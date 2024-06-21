@@ -45,7 +45,7 @@ jobs:
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
         run: |
           brew install llvm
-          python3 -m pip3 install --no-binary :all: --upgrade setuptools
+          python3 -m pip install --no-binary :all: --upgrade setuptools
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux'
