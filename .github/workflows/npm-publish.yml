@@ -278,5 +278,7 @@ jobs:
           # npm publish --access public
           ls -lah ./
           ls -lah ./prebuilds
+          ls -lah ./prebuilds/
+          ls -lah ./prebuilds/prebuilds/
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
