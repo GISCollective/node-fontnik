@@ -67,6 +67,9 @@ jobs:
 
       - name: Test
         if: matrix.os.name == 'darwin'
+        env:
+          CXX: c++
+          CC: cc
         run: |
           npm ci
           ./scripts/setup.sh --config local.env
