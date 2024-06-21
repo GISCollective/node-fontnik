@@ -12,9 +12,9 @@ jobs:
         node: [16, 18]
         build_type: ["debug", "release"]
         os:
-          # - name: darwin
-          #   architecture: x86
-          #   host: macos-12
+          - name: darwin
+            architecture: x86
+            host: macos-12
 
           - name: darwin
             architecture: arm64
@@ -73,6 +73,8 @@ jobs:
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
           LDFLAGS: "-L/opt/homebrew/opt/boost/lib -L/opt/homebrew/opt/freetype2/lib"
           CPPFLAGS: "-I/opt/homebrew/opt/boost/include -I/opt/homebrew/opt/freetype2/include/freetype2/"
+          DISABLE_BOOST_INSTALL_MASON: "true"
+          DISABLE_BOOST_INSTALL_FREETYPE: "true"
         run: |
           npm ci
           ./scripts/setup.sh --config local.env
