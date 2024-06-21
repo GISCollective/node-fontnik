@@ -71,8 +71,8 @@ jobs:
           CXX: clang++
           CC: clang
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
-          LDFLAGS: "-L/opt/homebrew/opt/boost@1.76/lib"
-          CPPFLAGS: "-I/opt/homebrew/opt/boost@1.76/include"
+          LDFLAGS: "-L/opt/homebrew/opt/boost@1.76/lib -L/opt/homebrew/opt/freetype2/lib"
+          CPPFLAGS: "-I/opt/homebrew/opt/boost@1.76/include -I/opt/homebrew/opt/freetype2/include"
         run: |
           npm ci
           ./scripts/setup.sh --config local.env
