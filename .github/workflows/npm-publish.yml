@@ -275,10 +275,6 @@ jobs:
 
       - name: Package and Publish
         run: |
-          # npm publish --access public
-          ls -lah ./
-          ls -lah ./prebuilds
-          ls -lah ./prebuilds/
-          ls -lah ./prebuilds/prebuilds/
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
