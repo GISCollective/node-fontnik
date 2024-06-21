@@ -38,8 +38,7 @@ jobs:
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin'
         run: |
-          brew install python llvm
-          brew install python-setuptools
+          brew install python@3.9 llvm
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux'
