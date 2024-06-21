@@ -45,7 +45,7 @@ jobs:
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
         run: |
           brew install llvm
-          brew install python-setuptools
+          python3 -m pip3 install --no-binary :all: --upgrade setuptools
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux'
@@ -83,6 +83,8 @@ jobs:
     env:
       BUILDTYPE: debug
       TOOLSET: asan
+      CXX: c++
+      CC: cc
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -91,6 +93,8 @@ jobs:
 
       - name: Test
         run: |
+          sudo apt update
+          sudo apt install -y clang llvm
           npm ci
           ./scripts/setup.sh --config local.env
           source local.env
