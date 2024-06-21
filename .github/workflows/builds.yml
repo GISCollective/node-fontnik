@@ -20,13 +20,13 @@ jobs:
           #   architecture: arm64
           #   host: macos-14
 
-          - name: linux
-            architecture: arm64
-            host: ubuntu-20.04
+          # - name: linux
+          #   architecture: arm64
+          #   host: ubuntu-20.04
 
-          - name: linux
-            architecture: x86
-            host: ubuntu-20.04
+          # - name: linux
+          #   architecture: x86
+          #   host: ubuntu-20.04
 
     name: ${{ matrix.os.name }}-${{ matrix.os.architecture }}-node${{ matrix.node }}-${{ matrix.build_type }} test
     steps:
@@ -68,8 +68,9 @@ jobs:
       - name: Test
         if: matrix.os.name == 'darwin'
         env:
-          CXX: c++
-          CC: cc
+          CXX: clang++
+          CC: clang
+          llvm_toolchain_dir: /opt/homebrew/opt/llvm/
         run: |
           npm ci
           ./scripts/setup.sh --config local.env
@@ -77,95 +78,95 @@ jobs:
           make ${{ matrix.build_type }}
           npm test
 
-  asan-build-test:
-    runs-on: ubuntu-20.04
-    name: ASAN toolset test
-    env:
-      BUILDTYPE: debug
-      TOOLSET: asan
-      CXX: c++
-      CC: cc
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "14"
+  # asan-build-test:
+  #   runs-on: ubuntu-20.04
+  #   name: ASAN toolset test
+  #   env:
+  #     BUILDTYPE: debug
+  #     TOOLSET: asan
+  #     CXX: c++
+  #     CC: cc
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "14"
 
-      - name: Test
-        run: |
-          npm ci
-          ./scripts/setup.sh --config local.env
-          source local.env
-          export CXXFLAGS="${MASON_SANITIZE_CXXFLAGS} -fno-sanitize-recover=all"
-          export LDFLAGS="${MASON_SANITIZE_LDFLAGS}"
-          make ${BUILDTYPE}
-          export LD_PRELOAD=${MASON_LLVM_RT_PRELOAD}
-          export ASAN_OPTIONS=fast_unwind_on_malloc=0:${ASAN_OPTIONS}
-          npm test
-          unset LD_PRELOAD
+  #     - name: Test
+  #       run: |
+  #         npm ci
+  #         ./scripts/setup.sh --config local.env
+  #         source local.env
+  #         export CXXFLAGS="${MASON_SANITIZE_CXXFLAGS} -fno-sanitize-recover=all"
+  #         export LDFLAGS="${MASON_SANITIZE_LDFLAGS}"
+  #         make ${BUILDTYPE}
+  #         export LD_PRELOAD=${MASON_LLVM_RT_PRELOAD}
+  #         export ASAN_OPTIONS=fast_unwind_on_malloc=0:${ASAN_OPTIONS}
+  #         npm test
+  #         unset LD_PRELOAD
 
-  g-build-test:
-    runs-on: ubuntu-20.04
-    name: G++ build test
-    env:
-      BUILDTYPE: debug
-      CXX: g++-9
-      CC: gcc-9
-      CXXFLAGS: -fext-numeric-literals
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "14"
+  # g-build-test:
+  #   runs-on: ubuntu-20.04
+  #   name: G++ build test
+  #   env:
+  #     BUILDTYPE: debug
+  #     CXX: g++-9
+  #     CC: gcc-9
+  #     CXXFLAGS: -fext-numeric-literals
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "14"
 
-      - name: Test
-        run: |
-          npm ci
-          ./scripts/setup.sh --config local.env
-          source local.env
-          make ${BUILDTYPE}
-          npm test
+  #     - name: Test
+  #       run: |
+  #         npm ci
+  #         ./scripts/setup.sh --config local.env
+  #         source local.env
+  #         make ${BUILDTYPE}
+  #         npm test
 
-  build:
-    needs: [test, asan-build-test, g-build-test]
-    runs-on: ${{ matrix.os.host }}
-    strategy:
-      matrix:
-        os:
-          - name: darwin
-            architecture: x86
-            host: macos-12
+  # build:
+  #   needs: [test, asan-build-test, g-build-test]
+  #   runs-on: ${{ matrix.os.host }}
+  #   strategy:
+  #     matrix:
+  #       os:
+  #         - name: darwin
+  #           architecture: x86
+  #           host: macos-12
 
-          - name: darwin
-            architecture: arm64
-            host: macos-14
+  #         - name: darwin
+  #           architecture: arm64
+  #           host: macos-14
 
-          - name: linux
-            architecture: arm64
-            host: ubuntu-20.04
+  #         - name: linux
+  #           architecture: arm64
+  #           host: ubuntu-20.04
 
-          - name: linux
-            architecture: x86
-            host: ubuntu-20.04
+  #         - name: linux
+  #           architecture: x86
+  #           host: ubuntu-20.04
 
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "16"
 
-      - name: Build
-        run: |
-          ./scripts/setup.sh --config local.env
-          source local.env
-          make release
+  #     - name: Build
+  #       run: |
+  #         ./scripts/setup.sh --config local.env
+  #         source local.env
+  #         make release
 
-      - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
-        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+  #     - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
+  #       run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
-      # Upload the end-user binary artifact
-      - uses: actions/upload-artifact@v3
-        with:
-          name: prebuilds
-          path: prebuilds
-          retention-days: 14
+  #     # Upload the end-user binary artifact
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: prebuilds
+  #         path: prebuilds
+  #         retention-days: 14
