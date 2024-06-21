@@ -16,9 +16,9 @@ jobs:
             architecture: x86
             host: macos-12
 
-          - name: darwin
-            architecture: arm64
-            host: macos-14
+          # - name: darwin
+          #   architecture: arm64
+          #   host: macos-14
 
           - name: linux
             architecture: arm64
@@ -39,13 +39,13 @@ jobs:
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
           brew install python llvm
-          python3 -m pip install --no-binary :all: --upgrade setuptools
+          brew install python-setuptools
 
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
         run: |
           brew install llvm
-          python3 -m pip install --no-binary :all: --upgrade setuptools
+          brew install python-setuptools
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux'
