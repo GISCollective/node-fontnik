@@ -21,7 +21,7 @@ jobs:
             host: macos-10.15
 
           - name: linux
-            architecture: x86-64
+            architecture: arm64
             host: ubuntu-20.04
 
           - name: linux
@@ -99,6 +99,14 @@ jobs:
           - name: darwin
             architecture: x86-64
             host: macos-10.15
+
+          - name: darwin
+            architecture: arm64
+            host: macos-10.15
+
+          - name: linux
+            architecture: arm64
+            host: ubuntu-20.04
 
           - name: linux
             architecture: x86-64
