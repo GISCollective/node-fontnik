@@ -39,9 +39,7 @@ jobs:
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
           brew install python llvm freetype
-          brew tap-new my/custom-boost
-          brew extract --version=1.67.0 boost my/custom-boost
-          brew install my/custom/boost@1.67
+          brew install archilogic-com/homebrew-formulae/boost@1.65
           brew install python-setuptools
 
       - name: Set up MacOS env
