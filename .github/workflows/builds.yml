@@ -38,7 +38,8 @@ jobs:
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
-          brew install python llvm freetype boost@1.76
+          brew install python llvm freetype
+          brew install https://raw.githubusercontent.com/archilogic-com/homebrew-formulae/master/Formula/boost@1.67.rb
           brew install python-setuptools
 
       - name: Set up MacOS env
