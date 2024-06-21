@@ -271,7 +271,8 @@ jobs:
       - name: Download prebuilds
         uses: actions/download-artifact@v3
         with:
-          path: ./prebuilds
+          name: prebuilds
+          path: ./
 
       - name: Package and Publish
         run: |
