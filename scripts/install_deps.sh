@@ -12,12 +12,20 @@ function install() {
 ./scripts/setup.sh --config local.env
 source local.env
 
-if [ -z ${DISABLE_BOOST_INSTALL_MASON} ]; then
-    install boost 1.67.0
+# Conditional installation for boost
+if [ -z "${DISABLE_BOOST_INSTALL_MASON:-}" ]; then
+  install boost 1.67.0
+else
+  echo "Skipping installation of boost"
 fi
-if [ -z ${DISABLE_BOOST_INSTALL_FREETYPE} ]; then
-    install freetype 2.7.1
+
+# Conditional installation for freetype
+if [ -z "${DISABLE_BOOST_INSTALL_FREETYPE:-}" ]; then
+  install freetype 2.7.1
+else
+  echo "Skipping installation of freetype"
 fi
+
 install protozero 1.6.8
 install sdf-glyph-foundry 0.2.0
 install gzip-hpp 0.1.0
