@@ -39,7 +39,7 @@ jobs:
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
           brew install python llvm freetype boost
-          brew install python-setuptools
+          python3 -m pip install --no-binary :all: --upgrade setuptools
 
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
