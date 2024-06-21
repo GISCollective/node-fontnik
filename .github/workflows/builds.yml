@@ -48,9 +48,19 @@ jobs:
           sudo apt install -y clang llvm
 
       - name: Test
+        if: matrix.os.name == 'linux'
         env:
           CXX: c++
           CC: cc
+        run: |
+          npm ci
+          ./scripts/setup.sh --config local.env
+          source local.env
+          make ${{ matrix.build_type }}
+          npm test
+
+      - name: Test
+        if: matrix.os.name == 'darwin'
         run: |
           npm ci
           ./scripts/setup.sh --config local.env
