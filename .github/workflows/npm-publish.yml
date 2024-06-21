@@ -38,7 +38,7 @@ jobs:
 
       - name: install setuptools
         if: matrix.os.name == 'darwin'
-        run: pip3 install setuptools
+        run: brew install python-setuptools
 
       - name: Test
         run: |
