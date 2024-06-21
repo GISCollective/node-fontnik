@@ -93,8 +93,6 @@ jobs:
 
       - name: Test
         run: |
-          sudo apt update
-          sudo apt install -y clang llvm
           npm ci
           ./scripts/setup.sh --config local.env
           source local.env
