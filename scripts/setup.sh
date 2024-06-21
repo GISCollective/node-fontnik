@@ -13,8 +13,8 @@ fi
 
 MASON_URL="https://s3.amazonaws.com/mason-binaries/${PLATFORM}-$(uname -m)"
 
-$mason_llvm_toolchain_dir="$(pwd)/.toolchain"
-$llvm_toolchain_dir="${llvm_toolchain_dir:-$mason_llvm_toolchain_dir}"
+mason_llvm_toolchain_dir="$(pwd)/.toolchain"
+llvm_toolchain_dir="${llvm_toolchain_dir:-$mason_llvm_toolchain_dir}"
 
 function run() {
     local config=${1}
