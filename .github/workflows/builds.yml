@@ -31,6 +31,8 @@ jobs:
     name: ${{ matrix.os.name }}-${{ matrix.os.architecture }}-node${{ matrix.node }}-${{ matrix.build_type }} test
     steps:
       - uses: actions/checkout@v3
+      - uses: melusina-org/setup-macports@v1
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
@@ -38,7 +40,8 @@ jobs:
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
-          brew install python llvm freetype boost@1.76
+          sudo port install boost169
+          brew install python llvm freetype
           brew install python-setuptools
 
       - name: Set up MacOS env
