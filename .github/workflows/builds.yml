@@ -223,6 +223,28 @@ jobs:
           make release
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
+        env:
+          CXX: clang++
+          CC: clang
+          llvm_toolchain_dir: /opt/homebrew/opt/llvm/
+          LDFLAGS: "-L/opt/homebrew/opt/boost/lib -L/opt/homebrew/opt/freetype2/lib"
+          CPPFLAGS: "-I/opt/homebrew/opt/boost/include -I/opt/homebrew/opt/freetype2/include/freetype2/"
+          DISABLE_BOOST_INSTALL_MASON: "true"
+          DISABLE_BOOST_INSTALL_FREETYPE: "true"
+          DISABLE_CLANG_INSTALL_VIA_MASON: "true"
+        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+
+      - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
+        env:
+          CXX: clang++
+          CC: clang
+          llvm_toolchain_dir: /opt/homebrew/opt/llvm/
+          DISABLE_CLANG_INSTALL_VIA_MASON: "true"
+        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+
+      - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
+        if: matrix.os.name == 'linux'
         run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       # Upload the end-user binary artifact
