@@ -35,9 +35,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: install setuptools
+      - name: Set up python on macos
         if: matrix.os.name == 'darwin'
-        run: brew install python-setuptools
+        run: |
+          brew install python
+          brew install python-setuptools
 
       - name: Test
         run: |
