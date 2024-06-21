@@ -44,7 +44,8 @@ jobs:
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
         run: |
-          brew install llvm python-setuptools
+          brew install llvm
+          python3 -m pip install --upgrade setuptools
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux'
