@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node: [16, 18]
-        build_type: ["debug", "release"]
+        build_type: ["release"]
         os:
           - name: darwin
             architecture: x86
@@ -252,7 +252,7 @@ jobs:
       # Upload the end-user binary artifact
       - uses: actions/upload-artifact@v3
         with:
-          name: prebuilds-${{ matrix.os.name }}-${{ matrix.os.architecture }}
+          name: prebuilds
           path: prebuilds
           retention-days: 14
 
