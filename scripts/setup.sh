@@ -52,7 +52,7 @@ function run() {
         mkdir -p ${llvm_toolchain_dir}
         curl -sSfL ${BINARY} | tar --gunzip --extract --strip-components=1 --directory=${llvm_toolchain_dir}
       fi
-    else
+    fi
 
     #
     # MASON
