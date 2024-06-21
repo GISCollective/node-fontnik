@@ -103,8 +103,6 @@ jobs:
     env:
       BUILDTYPE: debug
       TOOLSET: asan
-      CXX: c++
-      CC: cc
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
