@@ -12,13 +12,13 @@ jobs:
         node: [16, 18]
         build_type: ["debug", "release"]
         os:
-          - name: darwin
-            architecture: x86
-            host: macos-12
-
           # - name: darwin
-          #   architecture: arm64
-          #   host: macos-14
+          #   architecture: x86
+          #   host: macos-12
+
+          - name: darwin
+            architecture: arm64
+            host: macos-14
 
           # - name: linux
           #   architecture: arm64
