@@ -46,7 +46,7 @@ jobs:
         if: matrix.os.name == 'linux'
         run: |
           sudo apt update
-          sudo  apt install -y clang llvm
+          sudo apt install -y clang llvm
 
       - name: Test
         run: |
