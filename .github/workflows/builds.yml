@@ -151,9 +151,9 @@ jobs:
           #   architecture: x86
           #   host: macos-12
 
-          # - name: darwin
-          #   architecture: arm64
-          #   host: macos-14
+          - name: darwin
+            architecture: arm64
+            host: macos-14
 
           - name: linux
             architecture: arm64
@@ -172,6 +172,7 @@ jobs:
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
+          which docker
           brew install python llvm freetype boost
           python3 -m pip install --break-system-packages --no-binary :all: --upgrade setuptools
 
