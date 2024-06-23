@@ -182,13 +182,30 @@ jobs:
           python3 -m pip install --no-binary :all: --upgrade setuptools
 
       - name: Set up Linux env
-        if: matrix.os.name == 'linux'
+        if: matrix.os.name == 'linux' && matrix.os.architecture == 'arm64'
+        run: |
+          sudo apt update
+          sudo apt install -y clang llvm
+          sudo apt-get install -y crossbuild-essential-armhf
+
+      - name: Set up Linux env
+        if: matrix.os.name == 'linux' && matrix.os.architecture == 'x86'
         run: |
           sudo apt update
           sudo apt install -y clang llvm
 
       - name: Build
-        if: matrix.os.name == 'linux'
+        if: matrix.os.name == 'linux' && matrix.os.architecture == 'x86'
+        run: |
+          ./scripts/setup.sh --config local.env
+          source local.env
+          make release
+
+      - name: Build
+        if: matrix.os.name == 'linux' && matrix.os.architecture == 'arm64'
+        env:
+          CXX: arm-linux-gnueabihf-g++
+          CC: gcc-arm-linux-gnueabihf
         run: |
           ./scripts/setup.sh --config local.env
           source local.env
@@ -233,7 +250,7 @@ jobs:
           DISABLE_BOOST_INSTALL_MASON: "true"
           DISABLE_BOOST_INSTALL_FREETYPE: "true"
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
-        run: npm run prebuildify -- --target="node@$(node -p 'process.versions.modules')" --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         env:
@@ -241,11 +258,11 @@ jobs:
           CC: clang
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
-        run: npm run prebuildify -- --target="node@$(node -p 'process.versions.modules')" --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         if: matrix.os.name == 'linux'
-        run: npm run prebuildify -- --target="node@$(node -p 'process.versions.modules')" --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       # Upload the end-user binary artifact
       - uses: actions/upload-artifact@v3
