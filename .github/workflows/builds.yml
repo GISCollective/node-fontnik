@@ -267,6 +267,7 @@ jobs:
           CXX: aarch64-linux-gnu-g++
           CC: aarch64-linux-gnu-gcc
           LINK: aarch64-linux-gnu-g++
+          CXXFLAGS: -fext-numeric-literals
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
           TARGET_ARCH: arm64
