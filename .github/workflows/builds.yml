@@ -155,9 +155,9 @@ jobs:
             architecture: arm64
             host: macos-14
 
-          # - name: linux
-          #   architecture: arm64
-          #   host: ubuntu-22.04
+          - name: linux-on-darwin
+            architecture: arm64
+            host: macos-14
 
           # - name: linux
           #   architecture: x86
@@ -173,7 +173,6 @@ jobs:
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
           brew install python llvm freetype boost docker
-          which docker
           python3 -m pip install --break-system-packages --no-binary :all: --upgrade setuptools
 
       - name: Set up MacOS env
@@ -183,11 +182,8 @@ jobs:
           python3 -m pip install --no-binary :all: --upgrade setuptools
 
       - name: Set up Linux env
-        if: matrix.os.name == 'linux' && matrix.os.architecture == 'arm64'
-        run: |
-          sudo apt update
-          sudo apt install -y clang llvm
-          sudo apt-get install -y crossbuild-essential-armhf gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+        if: matrix.os.name == 'linux-on-darwin' && matrix.os.architecture == 'arm64'
+        uses: docker/setup-buildx-action@v1
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux' && matrix.os.architecture == 'x86'
@@ -203,14 +199,16 @@ jobs:
           make release
 
       - name: Build
-        if: matrix.os.name == 'linux' && matrix.os.architecture == 'arm64'
-        env:
-          CXX: arm-linux-gnueabihf-g++
-          CC: gcc-arm-linux-gnueabihf
+        if: matrix.os.name == 'linux-on-darwin' && matrix.os.architecture == 'arm64'
         run: |
-          ./scripts/setup.sh --config local.env
-          source local.env
-          make release
+          docker pull ubuntu:22:04
+          docker run --rm -v $PWD:/workspace -w /workspace ubuntu:22.04 /bin/bash -c "
+            apt-get update &&
+            apt-get install -y build-essential clang llvm &&
+            ./scripts/setup.sh --config local.env &&
+            source local.env &&
+            make release
+          "
 
       - name: Build
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
