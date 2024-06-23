@@ -186,7 +186,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y clang llvm
-          sudo apt-get install -y crossbuild-essential-armhf
+          sudo apt-get install -y crossbuild-essential-armhf gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
       - name: Set up Linux env
         if: matrix.os.name == 'linux' && matrix.os.architecture == 'x86'
@@ -253,6 +253,7 @@ jobs:
         run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
+        if: matrix.os.name == 'darwin' && matrix.os.architecture == 'x86'
         env:
           CXX: clang++
           CC: clang
@@ -261,7 +262,17 @@ jobs:
         run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
-        if: matrix.os.name == 'linux'
+        if: matrix.os.name == 'linux' && matrix.os.architecture == 'arm64'
+        env:
+          CXX: arm-linux-gnueabihf-g++
+          CC: gcc-arm-linux-gnueabihf
+          llvm_toolchain_dir: /opt/homebrew/opt/llvm/
+          DISABLE_CLANG_INSTALL_VIA_MASON: "true"
+          TARGET_ARCH: arm64
+        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }} --target_arch=arm64
+
+      - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
+        if: matrix.os.name == 'linux' && matrix.os.architecture == 'x86'
         run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       # Upload the end-user binary artifact

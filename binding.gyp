@@ -82,6 +82,22 @@
             'xcode_settings': {
               'OTHER_CPLUSPLUSFLAGS': [ '-Werror' ]
             }
+        }],
+        ['OS!="darwin" and host_arch!="arm64" and target_arch=="arm64"', {
+          'cflags': [
+            '--sysroot=/usr/aarch64-linux-gnu'
+          ],
+          'cflags_cc': [
+            '--sysroot=/usr/aarch64-linux-gnu'
+          ],
+          'ldflags': [
+            '--sysroot=/usr/aarch64-linux-gnu'
+          ],
+          'variables': {
+            'CC': 'aarch64-linux-gnu-gcc',
+            'CXX': 'aarch64-linux-gnu-g++',
+            'LINK': 'aarch64-linux-gnu-g++'
+          }
         }]
       ],
       'cflags_cc': [
