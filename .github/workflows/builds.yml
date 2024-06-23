@@ -264,8 +264,9 @@ jobs:
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         if: matrix.os.name == 'linux' && matrix.os.architecture == 'arm64'
         env:
-          CXX: gcc-arm-linux-gnueabihf
-          CC: gcc-arm-linux-gnueabihf
+          CXX: aarch64-linux-gnu-g++
+          CC: aarch64-linux-gnu-gcc
+          LINK: aarch64-linux-gnu-g++
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
           TARGET_ARCH: arm64
