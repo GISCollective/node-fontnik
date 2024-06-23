@@ -172,8 +172,8 @@ jobs:
       - name: Set up MacOS env
         if: matrix.os.name == 'darwin' && matrix.os.architecture == 'arm64'
         run: |
+          brew install python llvm freetype boost docker
           which docker
-          brew install python llvm freetype boost
           python3 -m pip install --break-system-packages --no-binary :all: --upgrade setuptools
 
       - name: Set up MacOS env
