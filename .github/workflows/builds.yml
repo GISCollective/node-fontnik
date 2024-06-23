@@ -233,7 +233,7 @@ jobs:
           DISABLE_BOOST_INSTALL_MASON: "true"
           DISABLE_BOOST_INSTALL_FREETYPE: "true"
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
-        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --target $(node -p 'process.versions.modules') --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         env:
@@ -241,11 +241,11 @@ jobs:
           CC: clang
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
-        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --target $(node -p 'process.versions.modules') --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         if: matrix.os.name == 'linux'
-        run: npm run prebuildify -- --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --target $(node -p 'process.versions.modules') --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       # Upload the end-user binary artifact
       - uses: actions/upload-artifact@v3
@@ -253,3 +253,71 @@ jobs:
           name: prebuilds
           path: prebuilds
           retention-days: 14
+
+  verify:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Download prebuilds
+        uses: actions/download-artifact@v3
+        with:
+          name: prebuilds-darwin-arm64
+          path: ./prebuilds/darwin-arm64
+
+      - name: Download prebuilds
+        uses: actions/download-artifact@v3
+        with:
+          name: prebuilds-darwin-x86
+          path: ./prebuilds/darwin-x86
+
+      - name: Download prebuilds
+        uses: actions/download-artifact@v3
+        with:
+          name: prebuilds-linux-arm64
+          path: ./prebuilds/linux-arm64
+
+      - name: Download prebuilds
+        uses: actions/download-artifact@v3
+        with:
+          name: prebuilds-linux-x86
+          path: ./prebuilds/linux-x86
+
+      - name: Verify and assert prebuilds
+        run: |
+          function verify_arch {
+            local file=$1
+            local expected_arch=$2
+            local arch=$(file "$file" | grep -o "$expected_arch")
+
+            if [ -z "$arch" ]; then
+              echo "ASSERTION FAILED: Expected $file to be of architecture $expected_arch"
+              exit 1
+            else
+              echo "ASSERTION PASSED: $file is of architecture $expected_arch"
+            fi
+          }
+
+          echo "Verifying prebuilds for darwin-arm64:"
+          for f in ./prebuilds/darwin-arm64/*; do
+            verify_arch "$f" "ARM64"
+          done
+
+          echo "Verifying prebuilds for darwin-x86:"
+          for f in ./prebuilds/darwin-x86/*; do
+            verify_arch "$f" "x86_64"
+          done
+
+          echo "Verifying prebuilds for linux-arm64:"
+          for f in ./prebuilds/linux-arm64/*; do
+            verify_arch "$f" "aarch64"
+          done
+
+          echo "Verifying prebuilds for linux-x86:"
+          for f in ./prebuilds/linux-x86/*; do
+            verify_arch "$f" "x86_64"
+          done
