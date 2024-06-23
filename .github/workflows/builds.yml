@@ -22,11 +22,11 @@ jobs:
 
           - name: linux
             architecture: arm64
-            host: ubuntu-20.04
+            host: ubuntu-22.04
 
           - name: linux
             architecture: x86
-            host: ubuntu-20.04
+            host: ubuntu-22.04
 
     name: ${{ matrix.os.name }}-${{ matrix.os.architecture }}-node${{ matrix.node }}-${{ matrix.build_type }} test
     steps:
@@ -95,7 +95,7 @@ jobs:
           npm test
 
   asan-build-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: ASAN toolset test
     env:
       BUILDTYPE: debug
@@ -120,7 +120,7 @@ jobs:
           unset LD_PRELOAD
 
   g-build-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: G++ build test
     env:
       BUILDTYPE: debug
@@ -157,11 +157,11 @@ jobs:
 
           - name: linux
             architecture: arm64
-            host: ubuntu-20.04
+            host: ubuntu-22.04
 
           - name: linux
             architecture: x86
-            host: ubuntu-20.04
+            host: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
@@ -233,7 +233,7 @@ jobs:
           DISABLE_BOOST_INSTALL_MASON: "true"
           DISABLE_BOOST_INSTALL_FREETYPE: "true"
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
-        run: npm run prebuildify -- --target $(node -p 'process.versions.modules') --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --target="node@$(node -p 'process.versions.modules')" --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         env:
@@ -241,11 +241,11 @@ jobs:
           CC: clang
           llvm_toolchain_dir: /opt/homebrew/opt/llvm/
           DISABLE_CLANG_INSTALL_VIA_MASON: "true"
-        run: npm run prebuildify -- --target $(node -p 'process.versions.modules') --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --target="node@$(node -p 'process.versions.modules')" --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       - name: Prebuildify ${{ matrix.os.name }}-${{ matrix.os.architecture }}
         if: matrix.os.name == 'linux'
-        run: npm run prebuildify -- --target $(node -p 'process.versions.modules') --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
+        run: npm run prebuildify -- --target="node@$(node -p 'process.versions.modules')" --platform=${{ matrix.os.name }} --arch=${{ matrix.os.architecture }}
 
       # Upload the end-user binary artifact
       - uses: actions/upload-artifact@v3
