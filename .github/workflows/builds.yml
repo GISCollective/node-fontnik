@@ -155,13 +155,13 @@ jobs:
             architecture: arm64
             host: macos-14
 
-          - name: linux
-            architecture: arm64
-            host: ubuntu-22.04
+          # - name: linux
+          #   architecture: arm64
+          #   host: ubuntu-22.04
 
-          - name: linux
-            architecture: x86
-            host: ubuntu-22.04
+          # - name: linux
+          #   architecture: x86
+          #   host: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
