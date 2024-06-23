@@ -181,6 +181,11 @@ jobs:
           brew install llvm
           python3 -m pip install --no-binary :all: --upgrade setuptools
 
+      - name: Set up MacOS env
+        if: matrix.os.name == 'linix-on-darwin' && matrix.os.architecture == 'arm64'
+        run: |
+          brew instal docker
+          
       - name: Set up Linux env
         if: matrix.os.name == 'linux-on-darwin' && matrix.os.architecture == 'arm64'
         uses: docker/setup-buildx-action@v1
